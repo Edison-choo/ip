@@ -89,6 +89,9 @@ public class Alice {
 
                     addTask("event", input);
                     break;
+                case "delete":
+                    deleteTask(parts);
+                    break;
                 default:
                     unknownMessage();
                     break;
@@ -229,13 +232,34 @@ public class Alice {
             System.out.println("AIYO! Please enter a valid number from 1 to " + tasks.size() + "!");
         }
         System.out.println(DOTTEDLINE);
-        return;
-
     }
 
     public void unknownMessage() {
         System.out.println(DOTTEDLINE);
         System.out.println("Sorry! I am not sure what are you talking about :(");
+        System.out.println(DOTTEDLINE);
+    }
+
+    public void deleteTask(String[] parts) {
+        if (parts.length < 2) {
+            System.out.println("AIYO! Please specify which task to delete (e.g. delete 2)");
+            System.out.println(DOTTEDLINE);
+            return;
+        }
+
+        try {
+            int index = Integer.parseInt(parts[1]) - 1;
+            Task removedTask = tasks.remove(index);
+            System.out.printf("""
+                    Noted, I've removed this task:
+                      %s
+                    Now you have %d tasks in the list.
+                    """, removedTask, tasks.size());
+        } catch (NumberFormatException e1) {
+            System.out.println("AIYO! Please enter a valid number! (e.g. mark 2)");
+        } catch (IndexOutOfBoundsException e2) {
+            System.out.println("AIYO! Please enter a valid number from 1 to " + tasks.size() + "!");
+        }
         System.out.println(DOTTEDLINE);
     }
 }

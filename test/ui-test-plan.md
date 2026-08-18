@@ -281,6 +281,56 @@ Bye Bye. Can't wait to talk to you again!
 ----------------------------------------------------------
   ```
 
+### TC-007: Delete a task and reindex the list
+
+- Aim: Verify that deleting a task removes the requested item, reports the remaining count, and renumbers the remaining tasks.
+- Command: `java -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8 -cp build/ui-test Alice`
+- Inputs:
+  ```text
+todo buy milk
+deadline submit report /by Friday
+event project meeting /from Monday 10am /to Monday 11am
+delete 2
+list
+bye
+  ```
+- Expected output:
+  ```text
+----------------------------------------------------------
+██████  ██     ████  █████  █████
+██  ██  ██      ██   ██     ██
+██████  ██      ██   ██     ████
+██  ██  ██      ██   ██     ██
+██  ██  █████  ████  █████  █████
+
+Hello! Alice is here to chat!
+What do you want to discuss with me?
+----------------------------------------------------------
+Got it. I've added this task:
+  [T][ ] buy milk
+Now you have 1 tasks in the list.
+----------------------------------------------------------
+Got it. I've added this task:
+  [D][ ] submit report (by: Friday)
+Now you have 2 tasks in the list.
+----------------------------------------------------------
+Got it. I've added this task:
+  [E][ ] project meeting (from: Monday 10am to: Monday 11am)
+Now you have 3 tasks in the list.
+----------------------------------------------------------
+Noted, I've removed this task:
+  [D][ ] submit report (by: Friday)
+Now you have 2 tasks in the list.
+----------------------------------------------------------
+Here are the tasks in your list:
+1.[T][ ] buy milk
+2.[E][ ] project meeting (from: Monday 10am to: Monday 11am)
+----------------------------------------------------------
+----------------------------------------------------------
+Bye Bye. Can't wait to talk to you again!
+----------------------------------------------------------
+  ```
+
 ## Test session: 2026-08-18 23:53:41 +08:00
 
 The session stopped before `TC-001` because the compile precondition failed. No test case was launched.
@@ -751,5 +801,62 @@ Bye Bye. Can't wait to talk to you again!
 $ java -cp build/ui-test Alice
 bye
 <actual output shown above>
+[exit code: 0]
+```
+
+## Test session: 2026-08-19 00:24:52 +08:00
+
+TC-007 passed. The delete command removed task 2 and the remaining tasks were reindexed correctly.
+
+### Preconditions: Compile all application classes — PASS
+
+```text
+$ javac -encoding UTF-8 -d build/ui-test src/main/java/*.java
+[exit code: 0]
+```
+
+### TC-007: Delete a task and reindex the list — PASS
+
+```text
+$ java -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8 -cp build/ui-test Alice
+todo buy milk
+deadline submit report /by Friday
+event project meeting /from Monday 10am /to Monday 11am
+delete 2
+list
+bye
+----------------------------------------------------------
+██████  ██     ████  █████  █████
+██  ██  ██      ██   ██     ██
+██████  ██      ██   ██     ████
+██  ██  ██      ██   ██     ██
+██  ██  █████  ████  █████  █████
+
+Hello! Alice is here to chat!
+What do you want to discuss with me?
+----------------------------------------------------------
+Got it. I've added this task:
+  [T][ ] buy milk
+Now you have 1 tasks in the list.
+----------------------------------------------------------
+Got it. I've added this task:
+  [D][ ] submit report (by: Friday)
+Now you have 2 tasks in the list.
+----------------------------------------------------------
+Got it. I've added this task:
+  [E][ ] project meeting (from: Monday 10am to: Monday 11am)
+Now you have 3 tasks in the list.
+----------------------------------------------------------
+Noted, I've removed this task:
+  [D][ ] submit report (by: Friday)
+Now you have 2 tasks in the list.
+----------------------------------------------------------
+Here are the tasks in your list:
+1.[T][ ] buy milk
+2.[E][ ] project meeting (from: Monday 10am to: Monday 11am)
+----------------------------------------------------------
+----------------------------------------------------------
+Bye Bye. Can't wait to talk to you again!
+----------------------------------------------------------
 [exit code: 0]
 ```
