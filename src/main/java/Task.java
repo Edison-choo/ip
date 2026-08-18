@@ -1,4 +1,4 @@
-public class Task {
+public abstract class Task {
     protected String description;
     protected boolean isDone;
 
@@ -15,8 +15,10 @@ public class Task {
         this.isDone = !this.isDone;
     }
 
+    public abstract String getTaskTypeIcon();
+
     @Override
     public String toString() {
-        return this.description;
+        return String.format("[%s] %s", this.getStatusIcon(), this.description);
     }
 }
