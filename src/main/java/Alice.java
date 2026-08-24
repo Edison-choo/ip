@@ -1,4 +1,7 @@
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
@@ -112,6 +115,17 @@ public class Alice {
                     break;
                 case "delete":
                     deleteTask(parts);
+                case "view":
+                    if (parts.length < 2) {
+                        System.out.println("AIYO!!! Please specify a date to view (e.g., view 2024-12-25)");
+                        break;
+                    }
+                    try {
+                        LocalDate dateToView = LocalDate.parse(parts[1].trim());
+                        viewTasksOnDate(dateToView);
+                    } catch (DateTimeParseException e) {
+                        System.out.println("AIYO!!! Please enter the date in yyyy-MM-dd format (e.g., 2024-12-25)");
+                    }
                     break;
                 default:
                     unknownMessage();
@@ -171,9 +185,16 @@ public class Alice {
                 System.out.println(DOTTEDLINE);
                 return;
             }
+            try {
+                LocalDate byDate = LocalDate.parse(parts[1].trim());
+                taskItem = new Deadlines(parts[0], byDate);
+                this.tasks.add(taskItem);
+            } catch (DateTimeParseException e) {
+                System.out.println("AIYO! Please enter the date in yyyy-MM-dd format. (e.g., 2024-12-20)");
+                System.out.println(DOTTEDLINE);
+                return;
+            }
 
-            taskItem = new Deadlines(parts[0], parts[1]);
-            this.tasks.add(taskItem);
         } else if (Objects.equals(type, "event")) {
             String[] parts = input.substring("event ".length()).split(" /from ");
 
@@ -200,8 +221,18 @@ public class Alice {
                 return;
             }
 
-            taskItem = new Events(parts[0], fromToParts[0], fromToParts[1]);
-            this.tasks.add(taskItem);
+            try {
+                LocalDate fromDate = LocalDate.parse(fromToParts[0].trim());
+                LocalDate toDate = LocalDate.parse(fromToParts[1].trim());
+                taskItem = new Events(parts[0], fromDate, toDate);
+                this.tasks.add(taskItem);
+            } catch (DateTimeParseException e) {
+                System.out.println("AIYO!!! Please enter dates in yyyy-MM-dd format (e.g., 2024-12-20)");
+                System.out.println(DOTTEDLINE);
+                return;
+            }
+
+
         }
 
         saveTasks();
@@ -284,6 +315,44 @@ public class Alice {
             System.out.println("AIYO! Please enter a valid number! (e.g. mark 2)");
         } catch (IndexOutOfBoundsException e2) {
             System.out.println("AIYO! Please enter a valid number from 1 to " + tasks.size() + "!");
+        }
+        System.out.println(DOTTEDLINE);
+    }
+
+    public void viewTasksOnDate(LocalDate date) {
+        boolean found = false;
+        int count = 0;
+
+        // Format the date nicely for display
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d yyyy");
+        System.out.println("Tasks on " + date.format(formatter) + ":");
+
+        for (int i = 0; i < tasks.size(); i++) {
+            Task task = tasks.get(i);
+            boolean isOnDate = false;
+
+            if (task instanceof Deadlines) {
+                Deadlines d = (Deadlines) task;
+                if (d.getBy().equals(date)) {
+                    isOnDate = true;
+                }
+            } else if (task instanceof Events) {
+                Events e = (Events) task;
+                // Check if the date falls within the event range (inclusive)
+                if (!e.getFrom().isAfter(date) && !e.getTo().isBefore(date)) {
+                    isOnDate = true;
+                }
+            }
+
+            if (isOnDate) {
+                count++;
+                System.out.println((count) + "." + task);
+                found = true;
+            }
+        }
+
+        if (!found) {
+            System.out.println("No tasks found on this date.");
         }
         System.out.println(DOTTEDLINE);
     }
