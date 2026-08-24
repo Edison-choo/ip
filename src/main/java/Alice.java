@@ -1,19 +1,40 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
 
 public class Alice {
     // Instance variable
-    private final ArrayList<Task> tasks;
+    private ArrayList<Task> tasks;
     public static final String DOTTEDLINE = "----------------------------------------------------------";
+    private final Storage storage;
 
     public Alice() {
         this.tasks = new ArrayList<>();
+        this.storage = new Storage("./data/alice.txt");
+        loadTasks();
     }
 
     public static void main(String[] args) {
         Alice alice = new Alice();
         alice.run();
+    }
+
+    private void loadTasks() {
+        try {
+            tasks = storage.load();
+            System.out.println("Loaded " + tasks.size() + " tasks from file.");
+        } catch (IOException e) {
+            System.out.println("Error loading tasks: " + e.getMessage());
+        }
+    }
+
+    private void saveTasks() {
+        try {
+            storage.save(tasks);
+        } catch (IOException e) {
+            System.out.println("Error saving tasks: " + e.getMessage());
+        }
     }
 
     public void run() {
@@ -183,6 +204,7 @@ public class Alice {
             this.tasks.add(taskItem);
         }
 
+        saveTasks();
         System.out.printf("""
                 Got it. I've added this task:
                   %s
@@ -219,10 +241,12 @@ public class Alice {
                 System.out.println("Ok, I've marked this task as not done yet;");
                 selectedTask.toggleStatus();
                 System.out.printf("  [%s] %s\n", selectedTask.getStatusIcon(), selectedTask);
+                saveTasks();
             } else if (!selectedTask.isDone && Objects.equals(type, "mark")) {
                 System.out.println("Nice! I've marked this task as done;");
                 selectedTask.toggleStatus();
                 System.out.printf("  %s\n", selectedTask);
+                saveTasks();
             } else {
                 System.out.printf("This task is already %s\n", type);
             }
@@ -255,6 +279,7 @@ public class Alice {
                       %s
                     Now you have %d tasks in the list.
                     """, removedTask, tasks.size());
+            saveTasks();
         } catch (NumberFormatException e1) {
             System.out.println("AIYO! Please enter a valid number! (e.g. mark 2)");
         } catch (IndexOutOfBoundsException e2) {
