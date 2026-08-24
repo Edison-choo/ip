@@ -1,18 +1,21 @@
-public class Events extends Task {
-    protected String from;
-    protected String to;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
-    public Events(String description, String from, String to) {
+public class Events extends Task {
+    protected LocalDate from;
+    protected LocalDate to;
+
+    public Events(String description, LocalDate from, LocalDate to) {
         super(description);
         this.from = from;
         this.to = to;
     }
 
-    public String getFrom() {
+    public LocalDate getFrom() {
         return from;
     }
 
-    public String getTo() {
+    public LocalDate getTo() {
         return to;
     }
 
@@ -23,6 +26,16 @@ public class Events extends Task {
 
     @Override
     public String toString() {
-        return String.format("[E]%s (from: %s to: %s)", super.toString(), this.from, this.to);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d yyyy");
+        return String.format("[E]%s (from: %s to: %s)", super.toString(),
+                this.from.format(formatter), this.to.format(formatter));
+    }
+
+    public String getFromForFile() {
+        return from.toString();
+    }
+
+    public String getToForFile() {
+        return to.toString();
     }
 }

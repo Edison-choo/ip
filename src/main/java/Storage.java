@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -57,11 +58,11 @@ public class Storage {
         } else if (task instanceof Deadlines) {
             type = "D";
             Deadlines d = (Deadlines) task;
-            return type + " | " + isDone + " | " + description + " | " + d.getBy();
+            return type + " | " + isDone + " | " + description + " | " + d.getByForFile();
         } else if (task instanceof Events) {
             type = "E";
             Events e = (Events) task;
-            return type + " | " + isDone + " | " + description + " | " + e.getFrom() + " | " + e.getTo();
+            return type + " | " + isDone + " | " + description + " | " + e.getFromForFile() + " | " + e.getToForFile();
         }
         return "";
     }
@@ -78,20 +79,28 @@ public class Storage {
 
         Task task = null;
 
-        switch (type) {
-            case "T":
-                task = new ToDos(description);
-                break;
-            case "D":
-                if (parts.length < 4) return null;
-                task = new Deadlines(description, parts[3]);
-                break;
-            case "E":
-                if (parts.length < 5) return null;
-                task = new Events(description, parts[3], parts[4]);
-                break;
-            default:
-                return null;
+        try {
+            switch (type) {
+                case "T":
+                    task = new ToDos(description);
+                    break;
+                case "D":
+                    if (parts.length < 4) return null;
+                    LocalDate by = LocalDate.parse(parts[3]); // yyyy-MM-dd
+                    task = new Deadlines(description, by);
+                    break;
+                case "E":
+                    if (parts.length < 5) return null;
+                    LocalDate from = LocalDate.parse(parts[3]);
+                    LocalDate to = LocalDate.parse(parts[4]);
+                    task = new Events(description, from, to);
+                    break;
+                default:
+                    return null;
+            }
+        } catch (Exception e) {
+            // If date parsing fails, return null (corrupted data)
+            return null;
         }
 
         if (task != null && isDone) {
