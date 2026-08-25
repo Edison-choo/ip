@@ -3,8 +3,18 @@ package alice;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Parses user input commands and extracts relevant information such as
+ * command type, description, dates, and indices.
+ */
 public class Parser {
 
+    /**
+     * Parses the full command string into a Command enum.
+     *
+     * @param fullCommand The raw user input.
+     * @return The corresponding Command enum, or {@link Command#UNKNOWN} if the command is invalid.
+     */
     public static Command parseCommand(String fullCommand) {
         if (fullCommand == null || fullCommand.trim().isEmpty()) {
             return Command.UNKNOWN;
@@ -13,6 +23,13 @@ public class Parser {
         return Command.parse(parts[0]);
     }
 
+    /**
+     * Extracts the description from a command string, removing the command prefix.
+     *
+     * @param fullCommand    The raw user input.
+     * @param commandPrefix The prefix to remove (e.g., "todo").
+     * @return The trimmed description, or an empty string if the prefix is not found or description is empty.
+     */
     public static String extractDescription(String fullCommand, String commandPrefix) {
         String trimmed = fullCommand.trim();
         if (!trimmed.startsWith(commandPrefix)) {
@@ -22,6 +39,13 @@ public class Parser {
         return description.isEmpty() ? "" : description;
     }
 
+    /**
+     * Parses a deadline command to extract the description and the date string.
+     *
+     * @param fullCommand The raw input string starting with "deadline ".
+     * @return A String array where index 0 is the description and index 1 is the date string,
+     *         or {@code null} if the format is invalid.
+     */
     public static String[] parseDeadline(String fullCommand) {
         String trimmed = fullCommand.trim();
         if (!trimmed.startsWith("deadline ")) {
@@ -38,6 +62,13 @@ public class Parser {
         return new String[]{parts[0].trim(), parts[1].trim()};
     }
 
+    /**
+     * Parses an event command to extract the description, start date, and end date.
+     *
+     * @param fullCommand The raw input string starting with "event ".
+     * @return A String array where indices are [description, fromDate, toDate],
+     *         or {@code null} if the format is invalid.
+     */
     public static String[] parseEvent(String fullCommand) {
         String trimmed = fullCommand.trim();
         if (!trimmed.startsWith("event ")) {
@@ -58,6 +89,12 @@ public class Parser {
         return new String[]{fromParts[0].trim(), toParts[0].trim(), toParts[1].trim()};
     }
 
+    /**
+     * Parses a task index from the command arguments.
+     *
+     * @param parts The split command array (e.g., ["mark", "2"]).
+     * @return The 0-based index of the task, or {@code -1} if the index is missing, negative, or invalid.
+     */
     public static int parseIndex(String[] parts) {
         if (parts.length < 2) {
             return -1;
@@ -73,6 +110,12 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses a task index from the command arguments.
+     *
+     * @param parts The split command array (e.g., ["mark", "2"]).
+     * @return The 0-based index of the task, or {@code -1} if the index is missing, negative, or invalid.
+     */
     public static LocalDate parseDate(String dateString) {
         try {
             return LocalDate.parse(dateString.trim());

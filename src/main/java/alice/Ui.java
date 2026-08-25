@@ -1,8 +1,15 @@
 package alice;
 
+/**
+ * Handles all interactions with the user, including displaying messages,
+ * task lists, error messages, and formatting outputs for the console.
+ */
 public class Ui {
     private static final String DOTTEDLINE = "----------------------------------------------------------";
 
+    /**
+     * Prints the welcome banner and greeting message to the console.
+     */
     public void printGreetings() {
         String greetings = """
                 ----------------------------------------------------------
@@ -18,21 +25,37 @@ public class Ui {
         System.out.println(greetings);
     }
 
+    /**
+     * Prints the goodbye message when the user exits the application.
+     */
     public void quitMessage() {
         System.out.println(DOTTEDLINE);
         System.out.println("Bye Bye. Can't wait to talk to you again!");
         System.out.println(DOTTEDLINE);
     }
 
+    /**
+     * Prints a visual separator line (dotted line) to structure the output.
+     */
     public void showSeparator() {
         System.out.println(DOTTEDLINE);
     }
 
+    /**
+     * Prints an error message followed by a separator line.
+     *
+     * @param message The error message to display.
+     */
     public void showError(String message) {
         System.out.println(message);
         showSeparator();
     }
 
+    /**
+     * Prints a confirmation message indicating that a task was successfully added.
+     *
+     * @param tasks The updated task list (used to retrieve the most recently added task and total count).
+     */
     public void showAddTask(TaskList tasks) {
         System.out.printf("""
                 Got it. I've added this task:
@@ -43,6 +66,12 @@ public class Ui {
         showSeparator();
     }
 
+    /**
+     * Prints a confirmation message indicating that a task was successfully deleted.
+     *
+     * @param task        The task that was removed.
+     * @param totalCount  The remaining number of tasks after deletion.
+     */
     public void showDeleteTask(Task task, int totalCount) {
         System.out.printf("""
                     Noted, I've removed this task:
@@ -52,18 +81,34 @@ public class Ui {
         showSeparator();
     }
 
+    /**
+     * Prints a confirmation message indicating that a task was successfully marked as done.
+     *
+     * @param task The task that was marked as done.
+     */
     public void showMarkTask(Task task) {
         System.out.println("Nice! I've marked this task as done;");
         System.out.printf("  %s\n", task);
         showSeparator();
     }
 
+    /**
+     * Prints a confirmation message indicating that a task was successfully unmarked.
+     *
+     * @param task The task that was marked as not done.
+     */
     public void showUnmarkTask(Task task) {
         System.out.println("Ok, I've marked this task as not done yet;");
         System.out.printf("  %s\n", task);
         showSeparator();
     }
 
+    /**
+     * Prints the current list of tasks to the console.
+     * If the list is empty, a message is displayed.
+     *
+     * @param tasks The task list to display.
+     */
     public void showTaskList(TaskList tasks) {
         if (tasks.isEmpty()) {
             System.out.println("No tasks in your list yet!");
@@ -76,6 +121,14 @@ public class Ui {
         showSeparator();
     }
 
+    /**
+     * Prints tasks that occur on a specific date.
+     * For deadlines, it checks the exact 'by' date.
+     * For events, it checks if the date falls within the event's range.
+     *
+     * @param tasks The task list to search in.
+     * @param date  The date to filter tasks by.
+     */
     public void showTasksOnDate(TaskList tasks, java.time.LocalDate date) {
         java.time.format.DateTimeFormatter formatter =
                 java.time.format.DateTimeFormatter.ofPattern("MMM d yyyy");
@@ -110,6 +163,9 @@ public class Ui {
         showSeparator();
     }
 
+    /**
+     * Prints a generic error message when an unknown or unrecognized command is entered.
+     */
     public void showUnknownCommand() {
         System.out.println("Sorry! I am not sure what are you talking about :(");
         showSeparator();
