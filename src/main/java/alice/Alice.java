@@ -81,6 +81,7 @@ public class Alice {
                     break;
                 case DELETE:
                     deleteTask(input);
+                    break;
                 case VIEW:
                     viewDate(input);
                     break;
