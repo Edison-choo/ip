@@ -8,6 +8,12 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
 
+/**
+ * The main class for the Alice chatbot application.
+ * This class orchestrates the flow of the program, handling user input,
+ * parsing commands, managing tasks, and coordinating between UI, Storage,
+ * and Parser components.
+ */
 public class Alice {
     // Instance variable
     private final Ui ui;
@@ -15,6 +21,12 @@ public class Alice {
     private final Parser parser;
     private TaskList tasks;
 
+    /**
+     * Constructs an Alice instance with the specified file path for task storage.
+     * Initializes all core components and loads tasks from the given file.
+     *
+     * @param filePath The relative or absolute path to the data file.
+     */
     public Alice(String filePath) {
         this.ui = new Ui();
         this.storage = new Storage(filePath);
@@ -23,11 +35,20 @@ public class Alice {
         loadTasks();
     }
 
+    /**
+     * The entry point of the application.
+     *
+     * @param args Command line arguments (not used).
+     */
     public static void main(String[] args) {
         Alice alice = new Alice("./data/alice.txt");
         alice.run();
     }
 
+    /**
+     * Loads tasks from the storage file.
+     * If an error occurs during loading, an empty task list is initialized.
+     */
     private void loadTasks() {
         try {
             tasks = new TaskList(storage.load());
@@ -37,6 +58,10 @@ public class Alice {
         }
     }
 
+    /**
+     * Saves the current task list to the storage file.
+     * If an error occurs during saving, an error message is printed to the UI.
+     */
     private void saveTasks() {
         try {
             storage.save(tasks.getTasks());
@@ -45,6 +70,11 @@ public class Alice {
         }
     }
 
+    /**
+     * Starts the main interaction loop of the chatbot.
+     * Reads user commands, parses them, and executes the corresponding actions
+     * until the user types the "bye" command.
+     */
     public void run() {
         // Setup
         Scanner scanner = new Scanner(System.in);
@@ -91,6 +121,13 @@ public class Alice {
         }
     }
 
+    /**
+     * Adds a new task to the list based on the specified type.
+     * Validates the input format and description before creating the task.
+     *
+     * @param type  The type of task to add: "todo", "deadline", or "event".
+     * @param input The raw user input containing the task description and optional dates.
+     */
     public void addTask(String type, String input) {
         Task taskItem;
         if (Objects.equals(type, "todo")) {
@@ -135,6 +172,15 @@ public class Alice {
         saveTasks();
     }
 
+    /**
+     * Toggles the status of a task based on the specified action.
+     * If the action is "mark", the task is marked as done only if it is not already done.
+     * If the action is "unmark", the task is marked as not done only if it is already done.
+     * If the task is already in the desired state, an error message is shown.
+     *
+     * @param type  The action to perform, either "mark" or "unmark".
+     * @param input The raw user input containing the task index.
+     */
     public void toggleTaskStatus(String type, String input) {
         String[] parts = input.split(" ");
         int index = Parser.parseIndex(parts);
@@ -163,6 +209,11 @@ public class Alice {
         }
     }
 
+    /**
+     * Deletes a task from the list based on the index provided in the input.
+     *
+     * @param input The raw user input containing the task index to delete.
+     */
     public void deleteTask(String input) {
         String[] parts = input.split(" ");
         int index = Parser.parseIndex(parts);
@@ -180,6 +231,13 @@ public class Alice {
         }
     }
 
+    /**
+     * Displays all tasks scheduled on a specific date.
+     * For deadlines, it matches the exact 'by' date.
+     * For events, it matches if the date falls within the event's start and end dates.
+     *
+     * @param input The raw user input containing the date to view in yyyy-MM-dd format.
+     */
     public void viewDate(String input) {
         String [] parts = input.split(" ");
         if (parts.length < 2) {

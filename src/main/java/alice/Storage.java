@@ -11,13 +11,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Handles the loading and saving of tasks to a file on the hard disk.
+ * The data is stored in a pipe-separated (|) format for easy parsing.
+ */
 public class Storage {
     private final String filePath;
 
+    /**
+     * Constructs a Storage instance with the specified file path.
+     *
+     * @param filePath The path where the task data will be read from and written to.
+     */
     public Storage(String filePath) {
         this.filePath = filePath;
     }
 
+    /**
+     * Saves the given list of tasks to the storage file.
+     * Creates the necessary directories if they do not exist.
+     *
+     * @param tasks The list of tasks to save.
+     * @throws IOException If an I/O error occurs while writing to the file.
+     */
     public void save(ArrayList<Task> tasks) throws IOException {
         Path directory = Paths.get(filePath).getParent();
         if (directory != null && !Files.exists(directory)) {
@@ -31,6 +47,13 @@ public class Storage {
         }
     }
 
+    /**
+     * Loads the task list from the storage file.
+     * If the file does not exist, an empty list is returned.
+     *
+     * @return An ArrayList of Tasks loaded from the file.
+     * @throws IOException If an I/O error occurs while reading the file.
+     */
     public ArrayList<Task> load() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
@@ -49,6 +72,12 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Converts a Task object into its file format representation.
+     *
+     * @param task The task to convert.
+     * @return A pipe-separated string representing the task.
+     */
     private String taskToFileFormat(Task task) {
         String type = "";
         String isDone = Objects.equals(task.getStatusIcon(), "X") ? "1" : "0";
@@ -69,6 +98,12 @@ public class Storage {
         return "";
     }
 
+    /**
+     * Converts a file format line back into a Task object.
+     *
+     * @param line The line of text read from the file.
+     * @return The reconstructed Task, or {@code null} if the line format is corrupted or invalid.
+     */
     private Task fileFormatToTask(String line) {
         String[] parts = line.split(" \\| ");
         if (parts.length < 3) {
