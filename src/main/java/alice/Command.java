@@ -10,6 +10,7 @@ public enum Command {
     DEADLINE,
     EVENT,
     UNKNOWN,
+    FIND,
     VIEW;
 
     public static Command parse(String input) {
@@ -36,6 +37,8 @@ public enum Command {
                 return EVENT;
             case "view":
                 return VIEW;
+            case "find":
+                return FIND;
             default:
                 return UNKNOWN;
         }

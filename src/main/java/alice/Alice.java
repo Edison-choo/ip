@@ -84,6 +84,9 @@ public class Alice {
                 case VIEW:
                     viewDate(input);
                     break;
+                case FIND:
+                    findTasks(input);
+                    break;
                 default:
                     ui.showUnknownCommand();
                     break;
@@ -192,5 +195,21 @@ public class Alice {
             return;
         }
         ui.showTasksOnDate(tasks, date);
+    }
+
+    /**
+     * Handles the "find" command to search for tasks by keyword.
+     *
+     * @param input The raw user input containing the keyword.
+     */
+    private void findTasks(String input) {
+        String[] parts = input.split(" ");
+        if (parts.length < 2 || parts[1].trim().isEmpty()) {
+            ui.showError("AIYO!!! Please specify a keyword to search for (e.g., find book)");
+            return;
+        }
+        String keyword = parts[1].trim();
+        TaskList matches = tasks.find(keyword);
+        ui.showMatchingTasks(matches, keyword);
     }
 }
