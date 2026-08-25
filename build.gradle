@@ -40,15 +40,34 @@ application {
     mainClass = 'alice.Alice'
 }
 
-jar {
-    // A lean JAR file (i.e., without the dependencies packaged inside) is not needed.
-    enabled = false
-    // Rename its output anyway; Gradle forbids it clashing with the shadowJar output file, even for a disabled task.
-    archiveClassifier = 'without-dependencies'
-}
+//jar {
+//    // A lean JAR file (i.e., without the dependencies packaged inside) is not needed.
+//    enabled = false
+//    // Rename its output anyway; Gradle forbids it clashing with the shadowJar output file, even for a disabled task.
+//    archiveClassifier = 'without-dependencies'
+//}
 
 shadowJar {
     archiveFileName = 'alice.jar'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'alice.Alice'
+        )
+    }
+
+    // Optional: Include all dependencies in the JAR (so it's a "fat JAR")
+    // This is useful if you add external libraries later (e.g., JavaFX).
+    // For now, since you only use standard Java, this isn't strictly necessary,
+    // but it's good practice to include if you ever add dependencies.
+//    from {
+//        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+//    }
+
+    // Override the default JAR name to "Alice.jar" (optional)
+    archiveFileName = 'Alice.jar'
 }
 
 run {
