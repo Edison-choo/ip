@@ -1,3 +1,5 @@
+package alice;
+
 public class Ui {
     private static final String DOTTEDLINE = "----------------------------------------------------------";
 
