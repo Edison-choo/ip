@@ -51,7 +51,7 @@ public class Storage {
 
     private String taskToFileFormat(Task task) {
         String type = "";
-        String isDone = Objects.equals(task.getStatusIcon(), "x") ? "1" : "0";
+        String isDone = Objects.equals(task.getStatusIcon(), "X") ? "1" : "0";
         String description = task.getDescription();
 
         if (task instanceof ToDos) {

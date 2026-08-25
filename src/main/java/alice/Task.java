@@ -14,8 +14,10 @@ public abstract class Task {
     }
 
     public String getStatusIcon() {
-        return (isDone ? "x" : " ");
+        return (isDone ? "X" : " ");
     }
+
+    public boolean isDone() { return this.isDone; }
 
     public void toggleStatus() {
         this.isDone = !this.isDone;
