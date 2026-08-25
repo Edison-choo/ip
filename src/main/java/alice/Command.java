@@ -1,3 +1,5 @@
+package alice;
+
 public enum Command {
     BYE,
     LIST,

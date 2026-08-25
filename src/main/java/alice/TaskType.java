@@ -1,3 +1,5 @@
+package alice;
+
 public enum TaskType {
     TODO("[T]"),
     DEADLINE("[D]"),
