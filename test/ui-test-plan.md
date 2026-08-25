@@ -1,4 +1,4 @@
-# UI Test Plan
+# Ui Test Plan
 
 ## Project information
 
