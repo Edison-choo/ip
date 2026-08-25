@@ -1,11 +1,11 @@
 ---
 name: test-ui
-description: Run interactive or command-line UI test cases defined by commands, inputs, and expected outputs; compare each result exactly, stop on the first failure, and record the complete console session. Use for testing this project's launched program and maintaining test/ui-test-plan.md.
+description: Run interactive or command-line Ui test cases defined by commands, inputs, and expected outputs; compare each result exactly, stop on the first failure, and record the complete console session. Use for testing this project's launched program and maintaining test/ui-test-plan.md.
 ---
 
-# UI test runner
+# Ui test runner
 
-Run the project's UI test cases one at a time from `test/ui-test-plan.md`. Treat the plan as the source of truth for the test command, inputs, and expected output. Use Java 25 when running this Java project, as required by the repository instructions.
+Run the project's Ui test cases one at a time from `test/ui-test-plan.md`. Treat the plan as the source of truth for the test command, inputs, and expected output. Use Java 25 when running this Java project, as required by the repository instructions.
 
 ## Accept and record test cases
 
@@ -35,7 +35,7 @@ Use this format:
 - Preconditions: ...
 ````
 
-Do not change an expected output merely to make a failing test pass. If the plan does not exist, create it with the heading `# UI Test Plan` and the cases supplied by the user. Keep prior test-session logs unless the user asks to replace them.
+Do not change an expected output merely to make a failing test pass. If the plan does not exist, create it with the heading `# Ui Test Plan` and the cases supplied by the user. Keep prior test-session logs unless the user asks to replace them.
 
 ## Execute the test session
 
