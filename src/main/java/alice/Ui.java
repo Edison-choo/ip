@@ -1,11 +1,30 @@
 package alice;
 
+import java.io.PrintStream;
+
 /**
  * Handles all interactions with the user, including displaying messages,
  * task lists, error messages, and formatting outputs for the console.
  */
 public class Ui {
     private static final String DOTTED_LINE = "----------------------------------------------------------";
+    private final PrintStream output;
+
+    /**
+     * Constructs a UI that writes to the standard output stream.
+     */
+    public Ui() {
+        this(System.out);
+    }
+
+    /**
+     * Constructs a UI that writes to the supplied output stream.
+     *
+     * @param output The destination for UI messages.
+     */
+    public Ui(PrintStream output) {
+        this.output = output;
+    }
 
     /**
      * Prints the welcome banner and greeting message to the console.
@@ -21,23 +40,50 @@ public class Ui {
                 Hello! Alice is here to chat!
                 What do you want to discuss with me?
                 ----------------------------------------------------------""";
-        System.out.println(greetings);
+        output.println(greetings);
+    }
+
+    /**
+     * Prints a plain-ASCII greeting banner for the graphical chat interface.
+     */
+    public void printChatGreetings() {
+        String greetings = """
+                ----------------------------------------------------------
+                AAAAA   L        I   CCCC   EEEEE
+               A     A  L        I  C       E
+               AAAAAAA  L        I  C       EEEE
+               A     A  L        I  C       E
+               A     A  LLLLL    I   CCCC   EEEEE
+
+                Hello! Alice is here to chat!
+                What do you want to discuss with me?
+                ----------------------------------------------------------""";
+        output.println(greetings);
     }
 
     /**
      * Prints the goodbye message when the user exits the application.
      */
     public void quitMessage() {
-        System.out.println(DOTTED_LINE);
-        System.out.println("Bye Bye. Can't wait to talk to you again!");
-        System.out.println(DOTTED_LINE);
+        output.println(DOTTED_LINE);
+        output.println("Bye Bye. Can't wait to talk to you again!");
+        output.println(DOTTED_LINE);
     }
 
     /**
      * Prints a visual separator line (dotted line) to structure the output.
      */
     public void showSeparator() {
-        System.out.println(DOTTED_LINE);
+        output.println(DOTTED_LINE);
+    }
+
+    /**
+     * Prints a plain informational message.
+     *
+     * @param message The message to display.
+     */
+    public void showMessage(String message) {
+        output.println(message);
     }
 
     /**
@@ -46,7 +92,7 @@ public class Ui {
      * @param message The error message to display.
      */
     public void showError(String message) {
-        System.out.println(message);
+        output.println(message);
         showSeparator();
     }
 
@@ -56,7 +102,7 @@ public class Ui {
      * @param tasks The updated task list (used to retrieve the most recently added task and total count).
      */
     public void showAddTask(TaskList tasks) {
-        System.out.printf("""
+        output.printf("""
                 Got it. I've added this task:
                   %s
                 Now you have %d tasks in the list.
@@ -72,7 +118,7 @@ public class Ui {
      * @param totalCount  The remaining number of tasks after deletion.
      */
     public void showDeleteTask(Task task, int totalCount) {
-        System.out.printf("""
+        output.printf("""
                     Noted, I've removed this task:
                       %s
                     Now you have %d tasks in the list.
@@ -86,8 +132,8 @@ public class Ui {
      * @param task The task that was marked as done.
      */
     public void showMarkTask(Task task) {
-        System.out.println("Nice! I've marked this task as done;");
-        System.out.printf("  %s\n", task);
+        output.println("Nice! I've marked this task as done;");
+        output.printf("  %s\n", task);
         showSeparator();
     }
 
@@ -97,8 +143,8 @@ public class Ui {
      * @param task The task that was marked as not done.
      */
     public void showUnmarkTask(Task task) {
-        System.out.println("Ok, I've marked this task as not done yet;");
-        System.out.printf("  %s\n", task);
+        output.println("Ok, I've marked this task as not done yet;");
+        output.printf("  %s\n", task);
         showSeparator();
     }
 
@@ -110,11 +156,11 @@ public class Ui {
      */
     public void showTaskList(TaskList tasks) {
         if (tasks.isEmpty()) {
-            System.out.println("No tasks in your list yet!");
+            output.println("No tasks in your list yet!");
         } else {
-            System.out.println("Here are the tasks in your list:");
+            output.println("Here are the tasks in your list:");
             for (int i = 0; i < tasks.size(); i++) {
-                System.out.printf("%d.%s\n", i + 1, tasks.get(i));
+                output.printf("%d.%s\n", i + 1, tasks.get(i));
             }
         }
         showSeparator();
@@ -131,7 +177,7 @@ public class Ui {
     public void showTasksOnDate(TaskList tasks, java.time.LocalDate date) {
         java.time.format.DateTimeFormatter formatter =
                 java.time.format.DateTimeFormatter.ofPattern("MMM d yyyy");
-        System.out.println("Tasks on " + date.format(formatter) + ":");
+        output.println("Tasks on " + date.format(formatter) + ":");
 
         boolean found = false;
         for (int i = 0; i < tasks.size(); i++) {
@@ -151,13 +197,13 @@ public class Ui {
             }
 
             if (isOnDate) {
-                System.out.println((i + 1) + "." + task);
+                output.println((i + 1) + "." + task);
                 found = true;
             }
         }
 
         if (!found) {
-            System.out.println("No tasks found on this date.");
+            output.println("No tasks found on this date.");
         }
         showSeparator();
     }
@@ -166,7 +212,7 @@ public class Ui {
      * Prints a generic error message when an unknown or unrecognized command is entered.
      */
     public void showUnknownCommand() {
-        System.out.println("Sorry! I am not sure what are you talking about :(");
+        output.println("Sorry! I am not sure what are you talking about :(");
         showSeparator();
     }
 
@@ -178,11 +224,11 @@ public class Ui {
      */
     public void showMatchingTasks(TaskList matchingTasks, String keyword) {
         if (matchingTasks.isEmpty()) {
-            System.out.println("No tasks found containing \"" + keyword + "\"");
+            output.println("No tasks found containing \"" + keyword + "\"");
         } else {
-            System.out.println("Here are the matching tasks in your list:");
+            output.println("Here are the matching tasks in your list:");
             for (int i = 0; i < matchingTasks.size(); i++) {
-                System.out.printf("%d.%s\n", i + 1, matchingTasks.get(i));
+                output.printf("%d.%s\n", i + 1, matchingTasks.get(i));
             }
         }
         showSeparator();
