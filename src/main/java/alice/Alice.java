@@ -25,7 +25,17 @@ public class Alice {
      * @param filePath The relative or absolute path to the data file.
      */
     public Alice(String filePath) {
-        this.ui = new Ui();
+        this(filePath, new Ui());
+    }
+
+    /**
+     * Constructs an Alice instance with a custom output interface.
+     *
+     * @param filePath The relative or absolute path to the data file.
+     * @param ui       The interface used to display application messages.
+     */
+    public Alice(String filePath, Ui ui) {
+        this.ui = Objects.requireNonNull(ui);
         this.storage = new Storage(filePath);
         this.parser = new Parser();
         this.tasks = new TaskList();
@@ -49,9 +59,9 @@ public class Alice {
     private void loadTasks() {
         try {
             tasks = new TaskList(storage.load());
-            System.out.println("Loaded " + tasks.size() + " tasks from file.");
+            ui.showMessage("Loaded " + tasks.size() + " tasks from file.");
         } catch (IOException e) {
-            System.out.println("Error loading tasks: " + e.getMessage());
+            ui.showMessage("Error loading tasks: " + e.getMessage());
         }
     }
 
@@ -63,7 +73,7 @@ public class Alice {
         try {
             storage.save(tasks.getTasks());
         } catch (IOException e) {
-            System.out.println("Error saving tasks: " + e.getMessage());
+            ui.showMessage("Error saving tasks: " + e.getMessage());
         }
     }
 
@@ -82,44 +92,56 @@ public class Alice {
         while (true) {
             // Read user input
             String input = scanner.nextLine();
-            Command command = Parser.parseCommand(input);
-
-            switch (command) {
-                case BYE:
-                    ui.quitMessage();
-                    break mainLoop;
-                case LIST:
-                    ui.showTaskList(tasks);
-                    break;
-                case MARK:
-                    toggleTaskStatus("mark", input);
-                    break;
-                case UNMARK:
-                    toggleTaskStatus("unmark", input);
-                    break;
-                case TODO:
-                    addTask("todo", input);
-                    break;
-                case DEADLINE:
-                    addTask("deadline", input);
-                    break;
-                case EVENT:
-                    addTask("event", input);
-                    break;
-                case DELETE:
-                    deleteTask(input);
-                    break;
-                case VIEW:
-                    viewDate(input);
-                    break;
-                case FIND:
-                    findTasks(input);
-                    break;
-                default:
-                    ui.showUnknownCommand();
-                    break;
+            if (!processCommand(input)) {
+                break mainLoop;
             }
         }
+    }
+
+    /**
+     * Processes one command and sends its response to the configured user interface.
+     *
+     * @param input The raw command entered by the user.
+     * @return false when the command exits the application, true otherwise.
+     */
+    public boolean processCommand(String input) {
+        Command command = Parser.parseCommand(input);
+        switch (command) {
+            case BYE:
+                ui.quitMessage();
+                return false;
+            case LIST:
+                ui.showTaskList(tasks);
+                break;
+            case MARK:
+                toggleTaskStatus("mark", input);
+                break;
+            case UNMARK:
+                toggleTaskStatus("unmark", input);
+                break;
+            case TODO:
+                addTask("todo", input);
+                break;
+            case DEADLINE:
+                addTask("deadline", input);
+                break;
+            case EVENT:
+                addTask("event", input);
+                break;
+            case DELETE:
+                deleteTask(input);
+                break;
+            case VIEW:
+                viewDate(input);
+                break;
+            case FIND:
+                findTasks(input);
+                break;
+            default:
+                ui.showUnknownCommand();
+                break;
+        }
+        return true;
     }
 
     /**
@@ -228,7 +250,7 @@ public class Alice {
             ui.showDeleteTask(removedTask, tasks.size());
             saveTasks();
         } catch (IndexOutOfBoundsException e2) {
-            System.out.println("AIYO! Please enter a valid number from 1 to " + tasks.size() + "!");
+            ui.showMessage("AIYO! Please enter a valid number from 1 to " + tasks.size() + "!");
         }
     }
 
