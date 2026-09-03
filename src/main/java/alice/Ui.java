@@ -5,7 +5,7 @@ package alice;
  * task lists, error messages, and formatting outputs for the console.
  */
 public class Ui {
-    private static final String DOTTEDLINE = "----------------------------------------------------------";
+    private static final String DOTTED_LINE = "----------------------------------------------------------";
 
     /**
      * Prints the welcome banner and greeting message to the console.
@@ -18,7 +18,6 @@ public class Ui {
                 ██████  ██      ██   ██     ████
                 ██  ██  ██      ██   ██     ██
                 ██  ██  █████  ████  █████  █████
-                
                 Hello! Alice is here to chat!
                 What do you want to discuss with me?
                 ----------------------------------------------------------""";
@@ -29,16 +28,16 @@ public class Ui {
      * Prints the goodbye message when the user exits the application.
      */
     public void quitMessage() {
-        System.out.println(DOTTEDLINE);
+        System.out.println(DOTTED_LINE);
         System.out.println("Bye Bye. Can't wait to talk to you again!");
-        System.out.println(DOTTEDLINE);
+        System.out.println(DOTTED_LINE);
     }
 
     /**
      * Prints a visual separator line (dotted line) to structure the output.
      */
     public void showSeparator() {
-        System.out.println(DOTTEDLINE);
+        System.out.println(DOTTED_LINE);
     }
 
     /**
@@ -115,7 +114,7 @@ public class Ui {
         } else {
             System.out.println("Here are the tasks in your list:");
             for (int i = 0; i < tasks.size(); i++) {
-                System.out.printf("%d.%s\n", i+1, tasks.get(i));
+                System.out.printf("%d.%s\n", i + 1, tasks.get(i));
             }
         }
         showSeparator();

@@ -1,11 +1,16 @@
 package alice;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class TaskListTest {
 
@@ -35,12 +40,12 @@ class TaskListTest {
 
     @Test
     void get_returnsCorrectTask() {
-        ToDos ToDos = new ToDos("read book");
-        taskList.add(ToDos);
+        ToDos todo = new ToDos("read book");
+        taskList.add(todo);
         taskList.add(new ToDos("buy milk"));
 
         Task retrieved = taskList.get(0);
-        assertEquals(ToDos, retrieved);
+        assertEquals(todo, retrieved);
         assertEquals("read book", retrieved.getDescription());
 
         // Test out-of-bounds
@@ -50,17 +55,17 @@ class TaskListTest {
 
     @Test
     void remove_removesTaskAndReturnsIt() {
-        ToDos ToDos1 = new ToDos("read book");
-        ToDos ToDos2 = new ToDos("buy milk");
-        taskList.add(ToDos1);
-        taskList.add(ToDos2);
+        ToDos todo1 = new ToDos("read book");
+        ToDos todo2 = new ToDos("buy milk");
+        taskList.add(todo1);
+        taskList.add(todo2);
 
         assertEquals(2, taskList.size());
 
         Task removed = taskList.remove(0);
-        assertEquals(ToDos1, removed);
+        assertEquals(todo1, removed);
         assertEquals(1, taskList.size());
-        assertEquals(ToDos2, taskList.get(0));
+        assertEquals(todo2, taskList.get(0));
 
         // Test out-of-bounds
         assertThrows(IndexOutOfBoundsException.class, () -> taskList.remove(99));

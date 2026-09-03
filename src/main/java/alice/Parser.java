@@ -111,10 +111,10 @@ public class Parser {
     }
 
     /**
-     * Parses a task index from the command arguments.
+     * Parses a date string into a {@link LocalDate}.
      *
-     * @param parts The split command array (e.g., ["mark", "2"]).
-     * @return The 0-based index of the task, or {@code -1} if the index is missing, negative, or invalid.
+     * @param dateString Date string to parse.
+     * @return Parsed date, or {@code null} if the date is invalid.
      */
     public static LocalDate parseDate(String dateString) {
         try {
