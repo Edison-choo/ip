@@ -1,21 +1,22 @@
 package alice;
 
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
+
+import org.junit.jupiter.api.Test;
 
 class TaskTypeTest {
 
     @Test
     void fromTask_returnsCorrectType() {
-        Task ToDos = new ToDos("read book");
-        Task Deadlines = new Deadlines("return book", LocalDate.parse("2024-12-25"));
-        Task Events = new Events("meeting", LocalDate.parse("2024-12-20"), LocalDate.parse("2024-12-22"));
+        Task todo = new ToDos("read book");
+        Task deadline = new Deadlines("return book", LocalDate.parse("2024-12-25"));
+        Task event = new Events("meeting", LocalDate.parse("2024-12-20"), LocalDate.parse("2024-12-22"));
 
-        assertEquals(TaskType.TODO, TaskType.fromTask(ToDos));
-        assertEquals(TaskType.DEADLINE, TaskType.fromTask(Deadlines));
-        assertEquals(TaskType.EVENT, TaskType.fromTask(Events));
+        assertEquals(TaskType.TODO, TaskType.fromTask(todo));
+        assertEquals(TaskType.DEADLINE, TaskType.fromTask(deadline));
+        assertEquals(TaskType.EVENT, TaskType.fromTask(event));
     }
 
     @Test

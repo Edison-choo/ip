@@ -43,7 +43,9 @@ public abstract class Task {
      *
      * @return true if the task is done, false otherwise.
      */
-    public boolean isDone() { return this.isDone; }
+    public boolean isDone() {
+        return this.isDone;
+    }
 
     /**
      * Toggles the done status of the task.

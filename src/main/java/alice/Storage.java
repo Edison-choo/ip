@@ -122,12 +122,16 @@ public class Storage {
                     task = new ToDos(description);
                     break;
                 case "D":
-                    if (parts.length < 4) return null;
+                    if (parts.length < 4) {
+                        return null;
+                    }
                     LocalDate by = LocalDate.parse(parts[3]); // yyyy-MM-dd
                     task = new Deadlines(description, by);
                     break;
                 case "E":
-                    if (parts.length < 5) return null;
+                    if (parts.length < 5) {
+                        return null;
+                    }
                     LocalDate from = LocalDate.parse(parts[3]);
                     LocalDate to = LocalDate.parse(parts[4]);
                     task = new Events(description, from, to);

@@ -1,14 +1,16 @@
 package alice;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 class StorageTest {
 
@@ -74,9 +76,9 @@ class StorageTest {
         Storage storage = new Storage(filePath.toString());
 
         ArrayList<Task> tasks = new ArrayList<>();
-        ToDos ToDos = new ToDos("read book");
-        ToDos.toggleStatus();
-        tasks.add(ToDos);
+        ToDos todo = new ToDos("read book");
+        todo.toggleStatus();
+        tasks.add(todo);
 
         storage.save(tasks);
         ArrayList<Task> loaded = storage.load();
