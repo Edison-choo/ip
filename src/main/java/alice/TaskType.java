@@ -2,17 +2,28 @@ package alice;
 
 /**
  * Enumerates the different types of tasks supported by the application.
- * Provides mapping between task instances and their corresponding type icons.
+ * Provides mappings between task instances, command keywords, and type icons.
  */
 public enum TaskType {
-    TODO("[T]"),
-    DEADLINE("[D]"),
-    EVENT("[E]");
+    TODO("todo", "[T]"),
+    DEADLINE("deadline", "[D]"),
+    EVENT("event", "[E]");
 
+    private final String command;
     private final String icon;
 
-    TaskType(String icon) {
+    TaskType(String command, String icon) {
+        this.command = command;
         this.icon = icon;
+    }
+
+    /**
+     * Returns the command keyword associated with this task type.
+     *
+     * @return The command keyword (e.g., "todo").
+     */
+    public String getCommand() {
+        return command;
     }
 
     /**

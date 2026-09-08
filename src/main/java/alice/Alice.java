@@ -12,10 +12,11 @@ import java.util.Scanner;
  * and Parser components.
  */
 public class Alice {
-    // Instance variable
+    private static final String MARK_COMMAND = "mark";
+    private static final String UNMARK_COMMAND = "unmark";
+
     private final Ui ui;
     private final Storage storage;
-    private final Parser parser;
     private TaskList tasks;
 
     /**
@@ -37,7 +38,6 @@ public class Alice {
     public Alice(String filePath, Ui ui) {
         this.ui = Objects.requireNonNull(ui);
         this.storage = new Storage(filePath);
-        this.parser = new Parser();
         this.tasks = new TaskList();
         loadTasks();
     }
@@ -114,19 +114,19 @@ public class Alice {
                 ui.showTaskList(tasks);
                 break;
             case MARK:
-                toggleTaskStatus("mark", input);
+                toggleTaskStatus(MARK_COMMAND, input);
                 break;
             case UNMARK:
-                toggleTaskStatus("unmark", input);
+                toggleTaskStatus(UNMARK_COMMAND, input);
                 break;
             case TODO:
-                addTask("todo", input);
+                addTask(TaskType.TODO, input);
                 break;
             case DEADLINE:
-                addTask("deadline", input);
+                addTask(TaskType.DEADLINE, input);
                 break;
             case EVENT:
-                addTask("event", input);
+                addTask(TaskType.EVENT, input);
                 break;
             case DELETE:
                 deleteTask(input);
@@ -148,51 +148,94 @@ public class Alice {
      * Adds a new task to the list based on the specified type.
      * Validates the input format and description before creating the task.
      *
-     * @param type  The type of task to add: "todo", "deadline", or "event".
+     * @param type  The type of task to add.
      * @param input The raw user input containing the task description and optional dates.
      */
-    public void addTask(String type, String input) {
-        Task taskItem;
-        if (Objects.equals(type, "todo")) {
-            String description = Parser.extractDescription(input, "todo");
-            if (description.isEmpty()) {
-                ui.showError("AIYO!!! The description of a todo cannot be empty.");
-                return;
-            }
-            taskItem = new ToDos(description);
-            this.tasks.add(taskItem);
-            ui.showAddTask(tasks);
-        } else if (Objects.equals(type, "deadline")) {
-            String[] parts = Parser.parseDeadline(input);
-            if (parts == null) {
-                ui.showError("AIYO!!! Please use: deadline <description> /by yyyy-MM-dd");
-                return;
-            }
-            LocalDate date = Parser.parseDate(parts[1]);
-            if (date == null) {
-                ui.showError("AIYO!!! Please enter the date in yyyy-MM-dd format (e.g., 2024-12-25)");
-                return;
-            }
-            taskItem = new Deadlines(parts[0], date);
-            this.tasks.add(taskItem);
-            ui.showAddTask(tasks);
-        } else if (Objects.equals(type, "event")) {
-            String[] parts = Parser.parseEvent(input);
-            if (parts == null) {
-                ui.showError("AIYO!!! Please use: event <description> /from yyyy-MM-dd /to yyyy-MM-dd");
-                return;
-            }
-            LocalDate from = Parser.parseDate(parts[1]);
-            LocalDate to = Parser.parseDate(parts[2]);
-            if (from == null || to == null) {
-                ui.showError("AIYO!!! Please enter dates in yyyy-MM-dd format (e.g., 2024-12-20)");
-                return;
-            }
-            taskItem = new Events(parts[0], from, to);
-            this.tasks.add(taskItem);
-            ui.showAddTask(tasks);
+    public void addTask(TaskType type, String input) {
+        Task task = createTask(type, input);
+        if (task == null) {
+            return;
         }
+
+        tasks.add(task);
+        ui.showAddTask(tasks);
         saveTasks();
+    }
+
+    /**
+     * Creates a task of the requested type after validating its input.
+     *
+     * @param type  The type of task to create.
+     * @param input The raw user input containing the task details.
+     * @return The created task, or {@code null} when the input is invalid.
+     */
+    private Task createTask(TaskType type, String input) {
+        if (type == TaskType.TODO) {
+            return createTodo(input);
+        } else if (type == TaskType.DEADLINE) {
+            return createDeadline(input);
+        } else if (type == TaskType.EVENT) {
+            return createEvent(input);
+        }
+        return null;
+    }
+
+    /**
+     * Creates a todo task from user input.
+     *
+     * @param input The raw todo command.
+     * @return The created todo, or {@code null} when its description is empty.
+     */
+    private Task createTodo(String input) {
+        String description = Parser.extractDescription(input, TaskType.TODO.getCommand());
+        if (description.isEmpty()) {
+            ui.showError("AIYO!!! The description of a todo cannot be empty.");
+            return null;
+        }
+        return new ToDos(description);
+    }
+
+    /**
+     * Creates a deadline task from user input.
+     *
+     * @param input The raw deadline command.
+     * @return The created deadline, or {@code null} when its format is invalid.
+     */
+    private Task createDeadline(String input) {
+        String[] parts = Parser.parseDeadline(input);
+        if (parts == null) {
+            ui.showError("AIYO!!! Please use: deadline <description> /by yyyy-MM-dd");
+            return null;
+        }
+
+        LocalDate date = Parser.parseDate(parts[1]);
+        if (date == null) {
+            ui.showError("AIYO!!! Please enter the date in yyyy-MM-dd format (e.g., 2024-12-25)");
+            return null;
+        }
+        return new Deadlines(parts[0], date);
+    }
+
+    /**
+     * Creates an event task from user input.
+     *
+     * @param input The raw event command.
+     * @return The created event, or {@code null} when its format is invalid.
+     */
+    private Task createEvent(String input) {
+        String[] parts = Parser.parseEvent(input);
+        if (parts == null) {
+            ui.showError("AIYO!!! Please use: event <description> /from yyyy-MM-dd /to yyyy-MM-dd");
+            return null;
+        }
+
+        LocalDate from = Parser.parseDate(parts[1]);
+        LocalDate to = Parser.parseDate(parts[2]);
+        if (from == null || to == null) {
+            ui.showError("AIYO!!! Please enter dates in yyyy-MM-dd format (e.g., 2024-12-20)");
+            return null;
+        }
+        return new Events(parts[0], from, to);
     }
 
     /**
