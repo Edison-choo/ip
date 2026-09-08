@@ -67,13 +67,17 @@ application {
 //}
 
 shadowJar {
-    archiveFileName = 'alice.jar'
+    archiveFileName = 'Alice.jar'
+
+    manifest {
+        attributes 'Main-Class': application.mainClass
+    }
 }
 
 jar {
     manifest {
         attributes(
-                'Main-Class': 'alice.Alice'
+                'Main-Class': 'alice.Launcher'
         )
     }
 
