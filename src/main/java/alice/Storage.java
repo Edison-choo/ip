@@ -35,6 +35,7 @@ public class Storage {
      * @throws IOException If an I/O error occurs while writing to the file.
      */
     public void save(ArrayList<Task> tasks) throws IOException {
+        assert tasks != null : "Tasks to save cannot be null";
         Path directory = Paths.get(filePath).getParent();
         if (directory != null && !Files.exists(directory)) {
             Files.createDirectories(directory);
@@ -79,6 +80,7 @@ public class Storage {
      * @return A pipe-separated string representing the task.
      */
     private String taskToFileFormat(Task task) {
+        assert task != null : "Task to serialize cannot be null";
         String type = "";
         String isDone = Objects.equals(task.getStatusIcon(), "X") ? "1" : "0";
         String description = task.getDescription();
@@ -144,7 +146,8 @@ public class Storage {
             return null;
         }
 
-        if (task != null && isDone) {
+        assert task != null : "A valid task record must produce a task";
+        if (isDone) {
             task.toggleStatus();
         }
         return task;
