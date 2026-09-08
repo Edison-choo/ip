@@ -25,4 +25,11 @@ class TaskTypeTest {
         assertEquals("[D]", TaskType.DEADLINE.getIcon());
         assertEquals("[E]", TaskType.EVENT.getIcon());
     }
+
+    @Test
+    void getCommand_returnsCorrectKeyword() {
+        assertEquals("todo", TaskType.TODO.getCommand());
+        assertEquals("deadline", TaskType.DEADLINE.getCommand());
+        assertEquals("event", TaskType.EVENT.getCommand());
+    }
 }
