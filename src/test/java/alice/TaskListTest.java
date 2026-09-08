@@ -39,6 +39,11 @@ class TaskListTest {
     }
 
     @Test
+    void add_rejectsNullTask_whenAssertionsEnabled() {
+        assertThrows(AssertionError.class, () -> taskList.add(null));
+    }
+
+    @Test
     void get_returnsCorrectTask() {
         ToDos todo = new ToDos("read book");
         taskList.add(todo);
