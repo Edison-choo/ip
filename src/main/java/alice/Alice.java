@@ -2,6 +2,8 @@ package alice;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -17,6 +19,7 @@ public class Alice {
 
     private final Ui ui;
     private final Storage storage;
+    private final Deque<TaskList> undoHistory = new ArrayDeque<>();
     private TaskList tasks;
 
     /**
@@ -137,6 +140,9 @@ public class Alice {
             case FIND:
                 findTasks(input);
                 break;
+            case UNDO:
+                undoLastCommand();
+                break;
             default:
                 ui.showUnknownCommand();
                 break;
@@ -157,6 +163,7 @@ public class Alice {
             return;
         }
 
+        saveStateForUndo();
         tasks.add(task);
         ui.showAddTask(tasks);
         saveTasks();
@@ -259,11 +266,13 @@ public class Alice {
         try {
             Task selectedTask = tasks.get(index);
 
-            if (selectedTask.isDone && Objects.equals(type, "unmark")) {
+            if (selectedTask.isDone && Objects.equals(type, UNMARK_COMMAND)) {
+                saveStateForUndo();
                 selectedTask.toggleStatus();
                 ui.showUnmarkTask(selectedTask);
                 saveTasks();
-            } else if (!selectedTask.isDone && Objects.equals(type, "mark")) {
+            } else if (!selectedTask.isDone && Objects.equals(type, MARK_COMMAND)) {
+                saveStateForUndo();
                 selectedTask.toggleStatus();
                 ui.showMarkTask(selectedTask);
                 saveTasks();
@@ -289,7 +298,9 @@ public class Alice {
         }
 
         try {
+            TaskList previousTasks = tasks.copy();
             Task removedTask = tasks.remove(index);
+            undoHistory.push(previousTasks);
             ui.showDeleteTask(removedTask, tasks.size());
             saveTasks();
         } catch (IndexOutOfBoundsException e2) {
@@ -332,5 +343,26 @@ public class Alice {
         String keyword = parts[1].trim();
         TaskList matches = tasks.find(keyword);
         ui.showMatchingTasks(matches, keyword);
+    }
+
+    /**
+     * Saves the current task list before a successful state-changing command.
+     */
+    private void saveStateForUndo() {
+        undoHistory.push(tasks.copy());
+    }
+
+    /**
+     * Restores the task list from the most recent undo snapshot.
+     */
+    private void undoLastCommand() {
+        if (undoHistory.isEmpty()) {
+            ui.showUndoUnavailable();
+            return;
+        }
+
+        tasks = undoHistory.pop();
+        saveTasks();
+        ui.showUndoSuccess();
     }
 }

@@ -66,6 +66,13 @@ public abstract class Task {
     public abstract String getTaskTypeIcon();
 
     /**
+     * Creates an independent copy of this task, including its completion status.
+     *
+     * @return A copy of this task.
+     */
+    public abstract Task copy();
+
+    /**
      * Returns the string representation of the task.
      * The format is: "[statusIcon] description" (e.g., "[X] read book").
      *

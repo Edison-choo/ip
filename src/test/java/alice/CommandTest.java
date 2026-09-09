@@ -19,6 +19,7 @@ class CommandTest {
         assertEquals(Command.DEADLINE, Command.parse("deadline"));
         assertEquals(Command.EVENT, Command.parse("event"));
         assertEquals(Command.VIEW, Command.parse("view"));
+        assertEquals(Command.UNDO, Command.parse("undo"));
         assertEquals(Command.UNKNOWN, Command.parse("unknown"));
         assertEquals(Command.UNKNOWN, Command.parse(""));
         assertEquals(Command.UNKNOWN, Command.parse(null));
@@ -42,6 +43,7 @@ class CommandTest {
         assertFalse(Command.UNMARK.isAddCommand());
         assertFalse(Command.DELETE.isAddCommand());
         assertFalse(Command.VIEW.isAddCommand());
+        assertFalse(Command.UNDO.isAddCommand());
         assertFalse(Command.UNKNOWN.isAddCommand());
     }
 
@@ -56,6 +58,7 @@ class CommandTest {
         assertFalse(Command.DEADLINE.requiresIndex());
         assertFalse(Command.EVENT.requiresIndex());
         assertFalse(Command.VIEW.requiresIndex());
+        assertFalse(Command.UNDO.requiresIndex());
         assertFalse(Command.UNKNOWN.requiresIndex());
     }
 }

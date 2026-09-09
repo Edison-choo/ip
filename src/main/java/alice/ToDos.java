@@ -24,6 +24,16 @@ public class ToDos extends Task {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Task copy() {
+        ToDos copy = new ToDos(description);
+        copy.isDone = isDone;
+        return copy;
+    }
+
+    /**
      * Returns the string representation of the todo task.
      * The format is "[T][status] description".
      *

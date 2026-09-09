@@ -28,3 +28,19 @@ expected output
 ## Feature XYZ
 
 // Feature details
+
+## Undoing the last change
+
+Use `undo` to restore the task list to the state before the most recent
+successful add, mark, unmark, or delete command. You can undo several changes
+one at a time. If there is no previous change to restore, Alice reports that
+there is nothing to undo.
+
+Example:
+
+```text
+todo read book
+undo
+```
+
+The task added by the first command is removed from the list.
