@@ -111,6 +111,19 @@ public class TaskList {
     }
 
     /**
+     * Creates a deep copy of this task list for undo history.
+     *
+     * @return A task list containing independent copies of all tasks.
+     */
+    public TaskList copy() {
+        ArrayList<Task> taskCopies = new ArrayList<>();
+        for (Task task : tasks) {
+            taskCopies.add(task.copy());
+        }
+        return new TaskList(taskCopies);
+    }
+
+    /**
      * Checks if a given 0-based index is within the bounds of the list.
      *
      * @param index The index to check.

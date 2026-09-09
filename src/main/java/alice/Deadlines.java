@@ -40,6 +40,16 @@ public class Deadlines extends Task {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Task copy() {
+        Deadlines copy = new Deadlines(description, by);
+        copy.isDone = isDone;
+        return copy;
+    }
+
+    /**
      * Returns the string representation of the deadline task.
      * The format is "[D][status] description (by: MMM d yyyy)".
      *

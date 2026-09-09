@@ -120,4 +120,23 @@ class TaskListTest {
         assertNotNull(tasks);
         assertEquals(2, tasks.size());
     }
+
+    @Test
+    void copy_createsIndependentTaskList() {
+        ToDos todo = new ToDos("read book");
+        todo.toggleStatus();
+        taskList.add(todo);
+        taskList.add(new Deadlines("return book", LocalDate.parse("2024-12-25")));
+        taskList.add(new Events("conference", LocalDate.parse("2024-12-20"),
+                LocalDate.parse("2024-12-22")));
+
+        TaskList copy = taskList.copy();
+        copy.get(0).toggleStatus();
+        copy.remove(1);
+
+        assertEquals(3, taskList.size());
+        assertTrue(taskList.get(0).isDone());
+        assertEquals("return book", taskList.get(1).getDescription());
+        assertEquals("conference", taskList.get(2).getDescription());
+    }
 }

@@ -233,4 +233,20 @@ public class Ui {
         }
         showSeparator();
     }
+
+    /**
+     * Prints a confirmation message after restoring an earlier task-list state.
+     */
+    public void showUndoSuccess() {
+        output.println("Done! I've undone the last action.");
+        showSeparator();
+    }
+
+    /**
+     * Prints an error when there is no earlier task-list state to restore.
+     */
+    public void showUndoUnavailable() {
+        output.println("There is nothing to undo.");
+        showSeparator();
+    }
 }

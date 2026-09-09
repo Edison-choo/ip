@@ -52,6 +52,16 @@ public class Events extends Task {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Task copy() {
+        Events copy = new Events(description, from, to);
+        copy.isDone = isDone;
+        return copy;
+    }
+
+    /**
      * Returns the string representation of the event task.
      * The format is "[E][status] description (from: MMM d yyyy to: MMM d yyyy)".
      *

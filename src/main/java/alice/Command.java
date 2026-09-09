@@ -16,7 +16,8 @@ public enum Command {
     EVENT,
     UNKNOWN,
     FIND,
-    VIEW;
+    VIEW,
+    UNDO;
 
     /**
      * Parses a string input into a Command enum.
@@ -50,6 +51,8 @@ public enum Command {
                 return VIEW;
             case "find":
                 return FIND;
+            case "undo":
+                return UNDO;
             default:
                 return UNKNOWN;
         }
