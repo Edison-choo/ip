@@ -55,8 +55,8 @@ public class Parser {
         if (!remaining.contains(" /by ")) {
             return null;
         }
-        String[] parts = remaining.split(" /by ");
-        if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
+        String[] parts = remaining.split(" /by ", -1);
+        if (parts.length != 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
             return null;
         }
         return new String[]{parts[0].trim(), parts[1].trim()};
@@ -78,12 +78,12 @@ public class Parser {
         if (!remaining.contains(" /from ") || !remaining.contains(" /to ")) {
             return null;
         }
-        String[] fromParts = remaining.split(" /from ");
-        if (fromParts.length < 2 || fromParts[0].trim().isEmpty()) {
+        String[] fromParts = remaining.split(" /from ", -1);
+        if (fromParts.length != 2 || fromParts[0].trim().isEmpty()) {
             return null;
         }
-        String[] toParts = fromParts[1].split(" /to ");
-        if (toParts.length < 2 || toParts[0].trim().isEmpty() || toParts[1].trim().isEmpty()) {
+        String[] toParts = fromParts[1].split(" /to ", -1);
+        if (toParts.length != 2 || toParts[0].trim().isEmpty() || toParts[1].trim().isEmpty()) {
             return null;
         }
         return new String[]{fromParts[0].trim(), toParts[0].trim(), toParts[1].trim()};
@@ -96,7 +96,7 @@ public class Parser {
      * @return The 0-based index of the task, or {@code -1} if the index is missing, negative, or invalid.
      */
     public static int parseIndex(String[] parts) {
-        if (parts.length < 2) {
+        if (parts.length != 2) {
             return -1;
         }
         try {

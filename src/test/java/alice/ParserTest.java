@@ -49,6 +49,9 @@ class ParserTest {
 
         String[] parts5 = {"mark", "-1"};
         assertEquals(-1, Parser.parseIndex(parts5));
+
+        String[] parts6 = {"mark", "1", "extra"};
+        assertEquals(-1, Parser.parseIndex(parts6));
     }
 
     @Test
@@ -64,6 +67,7 @@ class ParserTest {
         assertNull(Parser.parseDeadline("deadline /by 2024-12-25")); // empty description
         assertNull(Parser.parseDeadline("return book /by 2024-12-25")); // missing "deadline"
         assertNull(Parser.parseDeadline("deadline  /by ")); // empty both
+        assertNull(Parser.parseDeadline("deadline book /by 2024-12-25 /by 2024-12-26"));
     }
 
     @Test
@@ -79,6 +83,8 @@ class ParserTest {
         assertNull(Parser.parseEvent("event conference /from 2024-12-20")); // missing /to
         assertNull(Parser.parseEvent("event /from 2024-12-20 /to 2024-12-22")); // empty description
         assertNull(Parser.parseEvent("conference /from 2024-12-20 /to 2024-12-22")); // missing "event"
+        assertNull(Parser.parseEvent("event conference /to 2024-12-22 /from 2024-12-20"));
+        assertNull(Parser.parseEvent("event conference /from 2024-12-20 /to 2024-12-22 /to 2024-12-23"));
     }
 
     @Test

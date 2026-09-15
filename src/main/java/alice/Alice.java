@@ -16,6 +16,7 @@ import java.util.Scanner;
 public class Alice {
     private static final String MARK_COMMAND = "mark";
     private static final String UNMARK_COMMAND = "unmark";
+    private static final int MAX_DESCRIPTION_LENGTH = 100;
 
     private final Ui ui;
     private final Storage storage;
@@ -200,6 +201,9 @@ public class Alice {
             ui.showError("Aiyo, a todo needs a description. Try: todo <description>");
             return null;
         }
+        if (!isDescriptionValid(description)) {
+            return null;
+        }
         return new ToDos(description);
     }
 
@@ -213,6 +217,9 @@ public class Alice {
         String[] parts = Parser.parseDeadline(input);
         if (parts == null) {
             ui.showError("Aiyo, I need a task and date. Try: deadline <description> /by yyyy-MM-dd");
+            return null;
+        }
+        if (!isDescriptionValid(parts[0])) {
             return null;
         }
 
@@ -237,6 +244,9 @@ public class Alice {
                     + "/from yyyy-MM-dd /to yyyy-MM-dd");
             return null;
         }
+        if (!isDescriptionValid(parts[0])) {
+            return null;
+        }
 
         LocalDate from = Parser.parseDate(parts[1]);
         LocalDate to = Parser.parseDate(parts[2]);
@@ -244,7 +254,29 @@ public class Alice {
             ui.showError("Aiyo, please enter both dates as yyyy-MM-dd. Example: 2024-12-20");
             return null;
         }
+        if (to.isBefore(from)) {
+            ui.showError("Aiyo, the event cannot end before it starts.");
+            return null;
+        }
         return new Events(parts[0], from, to);
+    }
+
+    /**
+     * Checks whether a description is safe to display and save.
+     *
+     * @param description The task description to validate.
+     * @return true if the description meets Alice's input limits.
+     */
+    private boolean isDescriptionValid(String description) {
+        if (description.length() > MAX_DESCRIPTION_LENGTH) {
+            ui.showError("Aiyo, task descriptions can be at most " + MAX_DESCRIPTION_LENGTH + " characters.");
+            return false;
+        }
+        if (description.contains("|")) {
+            ui.showError("Aiyo, task descriptions cannot contain the | character.");
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -257,7 +289,7 @@ public class Alice {
      * @param input The raw user input containing the task index.
      */
     public void toggleTaskStatus(String type, String input) {
-        String[] parts = input.split(" ");
+        String[] parts = input.trim().split("\\s+");
         int index = Parser.parseIndex(parts);
 
         if (index == -1 || !tasks.isValidIndex(index)) {
@@ -293,7 +325,7 @@ public class Alice {
      * @param input The raw user input containing the task index to delete.
      */
     public void deleteTask(String input) {
-        String[] parts = input.split(" ");
+        String[] parts = input.trim().split("\\s+");
         int index = Parser.parseIndex(parts);
         if (index == -1 || !tasks.isValidIndex(index)) {
             ui.showError("Aiyo, please choose a valid task number. Try: delete 2");
@@ -319,8 +351,8 @@ public class Alice {
      * @param input The raw user input containing the date to view in yyyy-MM-dd format.
      */
     public void viewDate(String input) {
-        String [] parts = input.split(" ");
-        if (parts.length < 2) {
+        String[] parts = input.trim().split("\\s+");
+        if (parts.length != 2) {
             ui.showError("Aiyo, please tell me which date to check. Try: view 2024-12-25");
             return;
         }
@@ -338,12 +370,11 @@ public class Alice {
      * @param input The raw user input containing the keyword.
      */
     private void findTasks(String input) {
-        String[] parts = input.split(" ");
-        if (parts.length < 2 || parts[1].trim().isEmpty()) {
+        String keyword = Parser.extractDescription(input, "find").replaceAll("\\s+", " ");
+        if (keyword.isEmpty()) {
             ui.showError("Aiyo, please tell me what to find. Try: find book");
             return;
         }
-        String keyword = parts[1].trim();
         TaskList matches = tasks.find(keyword);
         ui.showMatchingTasks(matches, keyword);
     }
