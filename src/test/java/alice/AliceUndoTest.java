@@ -89,11 +89,11 @@ class AliceUndoTest {
     void undoWithoutHistoryShowsError() {
         alice.processCommand("undo");
 
-        assertTrue(outputAsString().contains("There is nothing to undo."));
+        assertTrue(outputAsString().contains("There is no earlier change to undo."));
     }
 
     private void assertTaskListIsEmpty() {
-        assertTrue(outputAsString().contains("No tasks in your list yet!"));
+        assertTrue(outputAsString().contains("Your list is clear."));
     }
 
     private String outputAsString() {

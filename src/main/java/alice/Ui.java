@@ -37,8 +37,8 @@ public class Ui {
                 ██████  ██      ██   ██     ████
                 ██  ██  ██      ██   ██     ██
                 ██  ██  █████  ████  █████  █████
-                Hello! Alice is here to chat!
-                What do you want to discuss with me?
+                Hello! I'm Alice, your cheerful task companion!
+                Let's make your plans feel a little lighter.
                 ----------------------------------------------------------""";
         output.println(greetings);
     }
@@ -55,8 +55,8 @@ public class Ui {
                A     A  L        I  C       E
                A     A  LLLLL    I   CCCC   EEEEE
 
-                Hello! Alice is here to chat!
-                What do you want to discuss with me?
+                Hello! I'm Alice, your cheerful task companion!
+                Let's make your plans feel a little lighter.
                 ----------------------------------------------------------""";
         output.println(greetings);
     }
@@ -66,7 +66,7 @@ public class Ui {
      */
     public void quitMessage() {
         output.println(DOTTED_LINE);
-        output.println("Bye Bye. Can't wait to talk to you again!");
+        output.println("Bye for now! I'll keep your tasks safe until next time.");
         output.println(DOTTED_LINE);
     }
 
@@ -103,9 +103,9 @@ public class Ui {
      */
     public void showAddTask(TaskList tasks) {
         output.printf("""
-                Got it. I've added this task:
+                Lovely! I've added this task:
                   %s
-                Now you have %d tasks in the list.
+                Tasks in your list: %d.
                 """,
                 tasks.get(tasks.size() - 1), tasks.size());
         showSeparator();
@@ -119,9 +119,9 @@ public class Ui {
      */
     public void showDeleteTask(Task task, int totalCount) {
         output.printf("""
-                    Noted, I've removed this task:
+                    All cleared! I've removed this task:
                       %s
-                    Now you have %d tasks in the list.
+                    Tasks left in your list: %d.
                     """, task, totalCount);
         showSeparator();
     }
@@ -132,7 +132,7 @@ public class Ui {
      * @param task The task that was marked as done.
      */
     public void showMarkTask(Task task) {
-        output.println("Nice! I've marked this task as done;");
+        output.println("Nicely done! You've completed this task:");
         output.printf("  %s\n", task);
         showSeparator();
     }
@@ -143,7 +143,7 @@ public class Ui {
      * @param task The task that was marked as not done.
      */
     public void showUnmarkTask(Task task) {
-        output.println("Ok, I've marked this task as not done yet;");
+        output.println("No worries! I've marked this task as not done:");
         output.printf("  %s\n", task);
         showSeparator();
     }
@@ -156,9 +156,9 @@ public class Ui {
      */
     public void showTaskList(TaskList tasks) {
         if (tasks.isEmpty()) {
-            output.println("No tasks in your list yet!");
+            output.println("Your list is clear. Add a task whenever you're ready!");
         } else {
-            output.println("Here are the tasks in your list:");
+            output.println("Here is what you have planned:");
             for (int i = 0; i < tasks.size(); i++) {
                 output.printf("%d.%s\n", i + 1, tasks.get(i));
             }
@@ -177,7 +177,7 @@ public class Ui {
     public void showTasksOnDate(TaskList tasks, java.time.LocalDate date) {
         java.time.format.DateTimeFormatter formatter =
                 java.time.format.DateTimeFormatter.ofPattern("MMM d yyyy");
-        output.println("Tasks on " + date.format(formatter) + ":");
+        output.println("Here is what you have planned for " + date.format(formatter) + ":");
 
         boolean found = false;
         for (int i = 0; i < tasks.size(); i++) {
@@ -203,7 +203,7 @@ public class Ui {
         }
 
         if (!found) {
-            output.println("No tasks found on this date.");
+            output.println("Nothing is scheduled for this date.");
         }
         showSeparator();
     }
@@ -212,7 +212,7 @@ public class Ui {
      * Prints a generic error message when an unknown or unrecognized command is entered.
      */
     public void showUnknownCommand() {
-        output.println("Sorry! I am not sure what are you talking about :(");
+        output.println("Aiyo, I didn't quite understand that. Try one of the commands shown below.");
         showSeparator();
     }
 
@@ -224,9 +224,9 @@ public class Ui {
      */
     public void showMatchingTasks(TaskList matchingTasks, String keyword) {
         if (matchingTasks.isEmpty()) {
-            output.println("No tasks found containing \"" + keyword + "\"");
+            output.println("I couldn't find any tasks containing \"" + keyword + "\".");
         } else {
-            output.println("Here are the matching tasks in your list:");
+            output.println("I found these matching tasks:");
             for (int i = 0; i < matchingTasks.size(); i++) {
                 output.printf("%d.%s\n", i + 1, matchingTasks.get(i));
             }
@@ -238,7 +238,7 @@ public class Ui {
      * Prints a confirmation message after restoring an earlier task-list state.
      */
     public void showUndoSuccess() {
-        output.println("Done! I've undone the last action.");
+        output.println("Done! I've turned back one step.");
         showSeparator();
     }
 
@@ -246,7 +246,7 @@ public class Ui {
      * Prints an error when there is no earlier task-list state to restore.
      */
     public void showUndoUnavailable() {
-        output.println("There is nothing to undo.");
+        output.println("There is no earlier change to undo.");
         showSeparator();
     }
 }

@@ -44,3 +44,16 @@ undo
 ```
 
 The task added by the first command is removed from the list.
+
+## Acknowledgements
+
+This project was developed with assistance from OpenAI ChatGPT and Codex. The
+project author provided the requirements, feature ideas, UI direction,
+implementation preferences, and final decisions. AI was used extensively as an
+implementation assistant to generate and refine portions of the JavaFX GUI,
+tests, error handling, refactoring, build configuration, and documentation.
+
+All AI-assisted work was directed, reviewed, adapted, and tested by the project
+author.
+
+The Alice profile image was generated using OpenAI's image-generation tool.
