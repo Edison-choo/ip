@@ -62,9 +62,10 @@ public class Alice {
     private void loadTasks() {
         try {
             tasks = new TaskList(storage.load());
-            ui.showMessage("Loaded " + tasks.size() + " tasks from file.");
+            ui.showMessage("Welcome back! Your saved list is ready with " + tasks.size() + " entries.");
         } catch (IOException e) {
-            ui.showMessage("Error loading tasks: " + e.getMessage());
+            ui.showMessage("Aiyo, I couldn't load your saved tasks. I'll start with an empty list. Details: "
+                    + e.getMessage());
         }
     }
 
@@ -76,7 +77,7 @@ public class Alice {
         try {
             storage.save(tasks.getTasks());
         } catch (IOException e) {
-            ui.showMessage("Error saving tasks: " + e.getMessage());
+            ui.showMessage("Aiyo, I couldn't save your latest changes. Details: " + e.getMessage());
         }
     }
 
@@ -196,7 +197,7 @@ public class Alice {
     private Task createTodo(String input) {
         String description = Parser.extractDescription(input, TaskType.TODO.getCommand());
         if (description.isEmpty()) {
-            ui.showError("AIYO!!! The description of a todo cannot be empty.");
+            ui.showError("Aiyo, a todo needs a description. Try: todo <description>");
             return null;
         }
         return new ToDos(description);
@@ -211,13 +212,13 @@ public class Alice {
     private Task createDeadline(String input) {
         String[] parts = Parser.parseDeadline(input);
         if (parts == null) {
-            ui.showError("AIYO!!! Please use: deadline <description> /by yyyy-MM-dd");
+            ui.showError("Aiyo, I need a task and date. Try: deadline <description> /by yyyy-MM-dd");
             return null;
         }
 
         LocalDate date = Parser.parseDate(parts[1]);
         if (date == null) {
-            ui.showError("AIYO!!! Please enter the date in yyyy-MM-dd format (e.g., 2024-12-25)");
+            ui.showError("Aiyo, please enter the date as yyyy-MM-dd. Example: 2024-12-25");
             return null;
         }
         return new Deadlines(parts[0], date);
@@ -232,14 +233,15 @@ public class Alice {
     private Task createEvent(String input) {
         String[] parts = Parser.parseEvent(input);
         if (parts == null) {
-            ui.showError("AIYO!!! Please use: event <description> /from yyyy-MM-dd /to yyyy-MM-dd");
+            ui.showError("Aiyo, I need an event and its dates. Try: event <description> "
+                    + "/from yyyy-MM-dd /to yyyy-MM-dd");
             return null;
         }
 
         LocalDate from = Parser.parseDate(parts[1]);
         LocalDate to = Parser.parseDate(parts[2]);
         if (from == null || to == null) {
-            ui.showError("AIYO!!! Please enter dates in yyyy-MM-dd format (e.g., 2024-12-20)");
+            ui.showError("Aiyo, please enter both dates as yyyy-MM-dd. Example: 2024-12-20");
             return null;
         }
         return new Events(parts[0], from, to);
@@ -259,7 +261,7 @@ public class Alice {
         int index = Parser.parseIndex(parts);
 
         if (index == -1 || !tasks.isValidIndex(index)) {
-            ui.showError("AIYO! Please specify a valid task number (e.g. mark 2)");
+            ui.showError("Aiyo, please choose a valid task number. Try: " + type + " 2");
             return;
         }
 
@@ -277,10 +279,11 @@ public class Alice {
                 ui.showMarkTask(selectedTask);
                 saveTasks();
             } else {
-                ui.showError("This task is already " + type);
+                String status = Objects.equals(type, MARK_COMMAND) ? "completed" : "not done";
+                ui.showError("That task is already marked as " + status + ".");
             }
         } catch (IndexOutOfBoundsException e2) {
-            ui.showError("AIYO! Please enter a valid number from 1 to " + tasks.size() + "!");
+            ui.showError("Aiyo, please choose a task number from 1 to " + tasks.size() + ".");
         }
     }
 
@@ -293,7 +296,7 @@ public class Alice {
         String[] parts = input.split(" ");
         int index = Parser.parseIndex(parts);
         if (index == -1 || !tasks.isValidIndex(index)) {
-            ui.showError("AIYO!!! Please specify a valid task number (e.g., delete 2)");
+            ui.showError("Aiyo, please choose a valid task number. Try: delete 2");
             return;
         }
 
@@ -304,7 +307,7 @@ public class Alice {
             ui.showDeleteTask(removedTask, tasks.size());
             saveTasks();
         } catch (IndexOutOfBoundsException e2) {
-            ui.showMessage("AIYO! Please enter a valid number from 1 to " + tasks.size() + "!");
+            ui.showError("Aiyo, please choose a task number from 1 to " + tasks.size() + ".");
         }
     }
 
@@ -318,12 +321,12 @@ public class Alice {
     public void viewDate(String input) {
         String [] parts = input.split(" ");
         if (parts.length < 2) {
-            ui.showError("AIYO!!! Please specify a date to view (e.g., view 2024-12-25)");
+            ui.showError("Aiyo, please tell me which date to check. Try: view 2024-12-25");
             return;
         }
         LocalDate date = Parser.parseDate(parts[1]);
         if (date == null) {
-            ui.showError("AIYO!!! Please enter the date in yyyy-MM-dd format (e.g., 2024-12-25)");
+            ui.showError("Aiyo, please enter the date as yyyy-MM-dd. Example: 2024-12-25");
             return;
         }
         ui.showTasksOnDate(tasks, date);
@@ -337,7 +340,7 @@ public class Alice {
     private void findTasks(String input) {
         String[] parts = input.split(" ");
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
-            ui.showError("AIYO!!! Please specify a keyword to search for (e.g., find book)");
+            ui.showError("Aiyo, please tell me what to find. Try: find book");
             return;
         }
         String keyword = parts[1].trim();
