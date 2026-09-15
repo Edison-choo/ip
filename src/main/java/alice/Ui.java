@@ -9,6 +9,7 @@ import java.io.PrintStream;
 public class Ui {
     private static final String DOTTED_LINE = "----------------------------------------------------------";
     private final PrintStream output;
+    private boolean errorResponse;
 
     /**
      * Constructs a UI that writes to the standard output stream.
@@ -92,8 +93,25 @@ public class Ui {
      * @param message The error message to display.
      */
     public void showError(String message) {
+        errorResponse = true;
         output.println(message);
         showSeparator();
+    }
+
+    /**
+     * Clears the response category before Alice processes another command.
+     */
+    public void resetResponseState() {
+        errorResponse = false;
+    }
+
+    /**
+     * Returns whether the current response represents an error.
+     *
+     * @return true if an error was shown after the latest reset.
+     */
+    public boolean isErrorResponse() {
+        return errorResponse;
     }
 
     /**
@@ -212,8 +230,7 @@ public class Ui {
      * Prints a generic error message when an unknown or unrecognized command is entered.
      */
     public void showUnknownCommand() {
-        output.println("Aiyo, I didn't quite understand that. Try one of the commands shown below.");
-        showSeparator();
+        showError("Aiyo, I didn't quite understand that. Try one of the commands shown below.");
     }
 
     /**
@@ -246,7 +263,6 @@ public class Ui {
      * Prints an error when there is no earlier task-list state to restore.
      */
     public void showUndoUnavailable() {
-        output.println("There is no earlier change to undo.");
-        showSeparator();
+        showError("There is no earlier change to undo.");
     }
 }

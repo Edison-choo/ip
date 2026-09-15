@@ -26,6 +26,11 @@
     -fx-font-weight: bold;
 }
 
+.status-offline {
+    -fx-background-color: #f4d3d8;
+    -fx-text-fill: #7a4650;
+}
+
 .conversation-scroll {
     -fx-background-color: #fff9f5;
     -fx-border-color: transparent;
@@ -52,6 +57,14 @@
 
 .alice-bubble {
     -fx-background-color: #eadff6;
+    -fx-font-family: "Consolas";
+}
+
+.error-bubble {
+    -fx-background-color: #f8dce2;
+    -fx-border-color: #e5a9b5;
+    -fx-border-radius: 18px;
+    -fx-text-fill: #713d48;
     -fx-font-family: "Consolas";
 }
 

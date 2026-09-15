@@ -64,7 +64,7 @@ public class Alice {
             tasks = new TaskList(storage.load());
             ui.showMessage("Welcome back! Your saved list is ready with " + tasks.size() + " entries.");
         } catch (IOException e) {
-            ui.showMessage("Aiyo, I couldn't load your saved tasks. I'll start with an empty list. Details: "
+            ui.showError("Aiyo, I couldn't load your saved tasks. I'll start with an empty list. Details: "
                     + e.getMessage());
         }
     }
@@ -77,7 +77,7 @@ public class Alice {
         try {
             storage.save(tasks.getTasks());
         } catch (IOException e) {
-            ui.showMessage("Aiyo, I couldn't save your latest changes. Details: " + e.getMessage());
+            ui.showError("Aiyo, I couldn't save your latest changes. Details: " + e.getMessage());
         }
     }
 
