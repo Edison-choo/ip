@@ -1,49 +1,162 @@
 # Alice User Guide
 
-// Update the title above to match the actual product name
+Alice is a cheerful pastel task companion that helps you keep track of todos,
+deadlines, and events through a simple chat interface.
 
-// Product screenshot goes here
+![Alice task companion interface](Ui.png)
 
-// Product intro goes here
+## Quick start
 
-## Adding deadlines
+1. Install Java 25 and confirm it is available by running `java -version`.
+2. Download `Alice.jar` from the
+   [latest GitHub release](https://github.com/Edison-choo/ip/releases).
+3. Place the JAR file in a folder where Alice can keep her data.
+4. Open a terminal in that folder and run:
 
-// Describe the action and its outcome.
+   ```text
+   java -jar Alice.jar
+   ```
 
-// Give examples of usage
+Alice automatically stores your tasks in `data/alice.txt` inside that folder.
+You do not need to create or edit the file yourself.
 
-Example: `keyword (optional arguments)`
+## Command summary
 
-// A description of the expected outcome goes here
+Enter commands in lowercase. Dates use the `yyyy-MM-dd` format, such as
+`2026-09-18`.
 
-```
-expected output
-```
+| Action | Command |
+| --- | --- |
+| Add a todo | `todo DESCRIPTION` |
+| Add a deadline | `deadline DESCRIPTION /by DATE` |
+| Add an event | `event DESCRIPTION /from START_DATE /to END_DATE` |
+| Show all tasks | `list` |
+| Mark a task as completed | `mark NUMBER` |
+| Mark a task as not completed | `unmark NUMBER` |
+| Delete a task | `delete NUMBER` |
+| Find tasks | `find KEYWORD_OR_PHRASE` |
+| View tasks on a date | `view DATE` |
+| Undo the latest change | `undo` |
+| Exit Alice | `bye` |
 
-## Feature ABC
+Task descriptions can contain up to 100 characters but cannot contain the `|`
+character. Alice allows duplicate tasks and dates in the past.
 
-// Feature details
+## Adding tasks
 
+### Adding a todo
 
-## Feature XYZ
-
-// Feature details
-
-## Undoing the last change
-
-Use `undo` to restore the task list to the state before the most recent
-successful add, mark, unmark, or delete command. You can undo several changes
-one at a time. If there is no previous change to restore, Alice reports that
-there is nothing to undo.
-
-Example:
+Use `todo` for a task without a date.
 
 ```text
-todo read book
+todo Read CS2103 notes
+```
+
+### Adding a deadline
+
+Use `deadline` for a task that must be completed by a specific date.
+
+```text
+deadline Submit iP /by 2026-09-18
+```
+
+### Adding an event
+
+Use `event` for something occurring over a date range. The end date may be the
+same as the start date, but it cannot be earlier.
+
+```text
+event Project meeting /from 2026-09-16 /to 2026-09-16
+```
+
+## Managing tasks
+
+### Listing tasks
+
+Use `list` to see every saved task and its number.
+
+```text
+list
+```
+
+Alice uses `[T]` for todos, `[D]` for deadlines, and `[E]` for events. `[X]`
+means a task is completed, while `[ ]` means it is not completed.
+
+### Marking and unmarking
+
+Use the number shown by `list` to update a task's completion status.
+
+```text
+mark 1
+unmark 1
+```
+
+### Deleting a task
+
+Use `delete` with the task number shown by `list`.
+
+```text
+delete 2
+```
+
+The remaining tasks are renumbered automatically.
+
+### Undoing a change
+
+Use `undo` to reverse the latest successful add, mark, unmark, or delete
+command. You can undo several changes one at a time during the current session.
+
+```text
+todo Read textbook
 undo
 ```
 
-The task added by the first command is removed from the list.
+If there is no earlier change, Alice will let you know without changing the
+task list.
+
+## Finding and viewing tasks
+
+### Finding tasks by description
+
+Use `find` with a word or phrase. The search is case-insensitive and checks the
+complete task description.
+
+```text
+find project meeting
+```
+
+### Viewing tasks on a date
+
+Use `view` to show deadlines due on a date and events occurring on that date.
+
+```text
+view 2026-09-16
+```
+
+For multi-day events, Alice includes every date from the start date through the
+end date.
+
+## Exiting Alice
+
+Enter `bye` to finish the session.
+
+```text
+bye
+```
+
+Alice displays a goodbye message, changes her status to `OFFLINE`, disables
+further input, and closes automatically after five seconds.
+
+## Input help
+
+When a command cannot be processed, Alice displays the problem in a pink error
+bubble and normally provides the correct format or an example. Check that:
+
+- The command is written in lowercase.
+- Required descriptions and task numbers are present.
+- Dates use the `yyyy-MM-dd` format.
+- Event end dates are not before their start dates.
+- Task numbers come from the latest `list` output.
 
 ## Acknowledgements
 
